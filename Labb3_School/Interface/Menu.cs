@@ -10,12 +10,12 @@ namespace Labb3_School.Interface
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Hej och välkommen till Skolan.");
-                Console.WriteLine("Vad vill du göra?\n" +
-                                  "1. Lista elever\n" +
-                                  "2. Lista elever i en viss klass\n" +
-                                  "3. Lägg till personal\n" +
-                                  "4. Avsluta");
+                Console.WriteLine("Hello and welcome to the School.");
+                Console.WriteLine("What would you like to do?\n" +
+                                  "1. List students\n" +
+                                  "2. List students in a specific class\n" +
+                                  "3. Add staff\n" +
+                                  "4. Exit");
 
                 string choice = Console.ReadLine();
 
@@ -37,12 +37,12 @@ namespace Labb3_School.Interface
                         break;
 
                     case "4":
-                        Console.WriteLine("Avslutar programmet...");
+                        Console.WriteLine("Exiting the program...");
                         Console.ReadKey();
                         return;
 
                     default:
-                        Console.WriteLine("Ogiltigt val. Försök igen.");
+                        Console.WriteLine("Invalid choice. Please try again.");
                         Console.ReadKey();
                         break;
                 }

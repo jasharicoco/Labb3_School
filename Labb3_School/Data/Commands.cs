@@ -9,11 +9,11 @@ namespace Labb3_School.Data
         {
             try
             {
-                Console.WriteLine("Välj hur du vill sortera eleverna:");
-                Console.WriteLine("1. Sortera på förnamn stigande");
-                Console.WriteLine("2. Sortera på förnamn fallande");
-                Console.WriteLine("3. Sortera på efternamn stigande");
-                Console.WriteLine("4. Sortera på efternamn fallande");
+                Console.WriteLine("Choose how you want to sort the students:");
+                Console.WriteLine("1. Sort by first name ascending");
+                Console.WriteLine("2. Sort by first name descending");
+                Console.WriteLine("3. Sort by last name ascending");
+                Console.WriteLine("4. Sort by last name descending");
 
                 string choice = Console.ReadLine();
 
@@ -48,7 +48,7 @@ namespace Labb3_School.Data
                             return; // Returnera efter utskrift för att undvika dublett-utskrift
 
                         default:
-                            Console.WriteLine("Ogiltigt val. Standardval är sortering på förnamn stigande.");
+                            Console.WriteLine("Invalid choice. The default option is sorting by first name ascending.");
                             sortedStudents = context.Students.OrderBy(s => s.FirstName).ToList();
                             break;
                     }
@@ -61,11 +61,11 @@ namespace Labb3_School.Data
             }
             catch (FormatException ex)
             {
-                Console.WriteLine("Felaktig inmatning. Var god ange ett nummer mellan 1 och 4.");
+                Console.WriteLine("Invalid input. Please enter a number between 1 and 4.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ett fel uppstod: {ex.Message}");
+                Console.WriteLine($"An error occured: {ex.Message}");
             }
         }
         public static void GetStudentsByClass()
@@ -77,7 +77,7 @@ namespace Labb3_School.Data
                     // Hämta alla klasser
                     var classes = context.Classes.ToList();
 
-                    Console.WriteLine("Välj en klass:");
+                    Console.WriteLine("Choose a class:");
                     for (int i = 0; i < classes.Count; i++)
                     {
                         Console.WriteLine($"{i + 1}. {classes[i].ClassName}");
@@ -87,7 +87,7 @@ namespace Labb3_School.Data
 
                     if (classChoice < 1 || classChoice > classes.Count)
                     {
-                        Console.WriteLine("Ogiltigt val. Försök igen.");
+                        Console.WriteLine("Invalid choice. Please try again.");
                         return;
                     }
 
@@ -98,7 +98,7 @@ namespace Labb3_School.Data
                         .Where(s => s.ClassId == selectedClass.ClassId)
                         .ToList();
 
-                    Console.WriteLine($"Elever i {selectedClass.ClassName}:");
+                    Console.WriteLine($"Students in {selectedClass.ClassName}:");
                     foreach (var student in studentsInClass)
                     {
                         Console.WriteLine($"{student.FirstName} {student.LastName} - {student.Class.ClassName}");
@@ -107,11 +107,11 @@ namespace Labb3_School.Data
             }
             catch (FormatException)
             {
-                Console.WriteLine("Felaktig inmatning. Var god ange ett giltigt nummer.");
+                Console.WriteLine("Invalid input. Please enter a valid number.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ett fel uppstod: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
         public static void AddEmployee()
@@ -122,30 +122,30 @@ namespace Labb3_School.Data
                 {
                     // Hämta och visa alla professioner
                     var professions = context.Professions.ToList();
-                    Console.WriteLine("Tillgängliga yrken:");
+                    Console.WriteLine("Available professions:");
                     foreach (var p in professions)
                     {
                         Console.WriteLine($"{p.ProfessionId}: {p.ProfessionName}");
                     }
 
-                    Console.WriteLine("Ange Id för yrket för den nya anställda:");
+                    Console.WriteLine("Enter the profession ID for the new employee:");
                     if (!int.TryParse(Console.ReadLine(), out int professionId) || !professions.Any(p => p.ProfessionId == professionId))
                     {
-                        Console.WriteLine("Ogiltigt yrkes-Id. Försök igen.");
+                        Console.WriteLine("Invalid profession ID. Please try again.");
                         return;
                     }
 
-                    Console.WriteLine("Ange förnamn för den nya anställda:");
+                    Console.WriteLine("Enter the first name for the new employee:");
                     string firstName = Console.ReadLine();
 
-                    Console.WriteLine("Ange efternamn för den nya anställda:");
+                    Console.WriteLine("Enter the last name for the new employee:");
                     string lastName = Console.ReadLine();
 
                     // Kontrollera om den valda professionen existerar
                     var profession = professions.FirstOrDefault(p => p.ProfessionId == professionId);
                     if (profession == null)
                     {
-                        Console.WriteLine("Yrkes-Id kunde inte hittas. Försök igen.");
+                        Console.WriteLine("The profession ID could not be found. Please try again.");
                         return;
                     }
 
@@ -160,36 +160,43 @@ namespace Labb3_School.Data
                     context.Employees.Add(newEmployee);
                     context.SaveChanges();
 
-                    Console.WriteLine("Den nya anställda har lagts till i databasen.");
+                    Console.WriteLine("The new employee has been added to the database.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ett fel uppstod vid sparandet av den nya anställda: {ex.Message}");
+                Console.WriteLine($"An error occurred while saving the new employee: {ex.Message}");
             }
         }
-        public static void GetAllGrades()
-        {
-            using (var context = new Labb3SchoolDbEgzonContext())
-            {
-                // Hämta alla betyg med relaterad student och ämne
-                var allGrades = context.Grades
-                    .Include(g => g.Student)   // Hämtar den relaterade studenten
-                    .Include(g => g.Subject)   // Hämtar det relaterade ämnet
-                    .ToList();                 // Hämta till en lista
+        //public static void GetAllGrades() // Sparar till eventuellt nästa labb
+        //{
+        //    try
+        //    {
+        //        using (var context = new Labb3SchoolDbEgzonContext())
+        //        {
+        //            // Hämta alla betyg med relaterad student och ämne
+        //            var allGrades = context.Grades
+        //                .Include(g => g.Student)   // Hämtar den relaterade studenten
+        //                .Include(g => g.Subject)   // Hämtar det relaterade ämnet
+        //                .ToList();                 // Hämta till en lista
 
-                // Skriv ut betygen
-                foreach (var grade in allGrades)
-                {
-                    string studentName = grade.Student.FirstName + " " + grade.Student.LastName;
-                    string subjectName = grade.Subject.SubjectName;
-                    string gradeValue = grade.Grade1;
-                    DateOnly dateAssigned = grade.DateAssigned;
+        //            // Skriv ut betygen
+        //            foreach (var grade in allGrades)
+        //            {
+        //                string studentName = grade.Student.FirstName + " " + grade.Student.LastName;
+        //                string subjectName = grade.Subject.SubjectName;
+        //                string gradeValue = grade.Grade1;
+        //                DateOnly dateAssigned = grade.DateAssigned;
 
-                    // Skriv ut informationen för varje betyg
-                    Console.WriteLine($"{studentName} - {subjectName}: {gradeValue} (Assigned on {dateAssigned.ToShortDateString()})");
-                }
-            }
-        }
+        //                // Skriv ut informationen för varje betyg
+        //                Console.WriteLine($"{studentName} - {subjectName}: {gradeValue} (Assigned on {dateAssigned.ToShortDateString()})");
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"An error occured: {ex.Message}");
+        //    }
+        //}
     }
 }
